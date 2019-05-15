@@ -1,0 +1,22 @@
+ 
+ # Example that prints the output and addresses and gateway for each host
+
+- shell: /usr/bin/uptime
+  register: res
+
+- name: Pipe Module to get remote node command
+  debug: msg="{{ lookup('pipe','sleep 6s; date; sleep 6s') }}"
+
+
+- name: Shell with delayed return   
+  shell:  echo "Testing";
+          sleep 5s;          
+          echo "Here" ;
+          sleep 5s ;
+          echo "Running" ;
+          sleep 15s ;
+  
+#- name: Display all variables/facts known for a host
+ # debug:
+  #  var: hostvars[inventory_hostname]
+   # verbosity: 2

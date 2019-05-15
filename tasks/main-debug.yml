@@ -1,0 +1,48 @@
+ 
+ # Example to work with debug module_defaults First task
+- name: First Task
+  ping: 
+- debug:
+    msg: "Node  Host Name {{ inventory_hostname }} has uuid {{ ansible_product_uuid }}"
+
+- debug:
+    msg: "Node {{ inventory_hostname }} has gateway addresss as {{ ansible_default_ipv4.gateway }}"
+  when: ansible_default_ipv4.gateway is defined
+
+- shell: /usr/bin/uptime
+  register: res
+
+- name: second task
+  debug:
+    msg: "Node IP  {{ inventory_hostname }} has gateway {{ ansible_default_ipv4.gateway }}"
+
+- name: Ping task
+  ping:
+  register: data1
+  
+- name : Ping Output Display
+  debug:
+    var: data1
+
+- name : Ping STD-Output 
+  debug:
+    var: data1.stdout_lines
+- debug:
+    var: res    
+- name : Shell Output of Uptime
+  debug:
+    var: res
+- name : Std Output of shell
+  debug:
+    var: res.stdout_lines
+- name: Shell with delayed return
+  shell: /usr/bin/uptime; echo "Testing "; sleep 26s
+  register: delo
+
+- debug:
+    var: delo.stdout_lines
+
+- name: Display all variables/facts known for a host
+  debug:
+    var: hostvars[inventory_hostname]
+    verbosity: 2

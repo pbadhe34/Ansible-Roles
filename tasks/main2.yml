@@ -1,0 +1,10 @@
+---
+
+- name: Install the MySQL packages   
+  ping:
+  register: result
+   
+
+- name: Display all variables/facts known for a host
+  ping:
+  debug:

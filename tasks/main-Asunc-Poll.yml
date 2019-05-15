@@ -1,0 +1,42 @@
+ 
+ # Example that prints the output and addresses and gateway for each host
+
+- shell: /usr/bin/uptime
+  register: res
+
+- name: Pipe Module to run commnad on remote node and get node output
+  debug: msg="{{ lookup('pipe','sleep 6s; date; sleep 6s') }}"
+
+- name: First Shell with delayed return   
+  shell:  echo "Pl.wait for 5 sec";
+          sleep 5s;          
+          echo "Here I am back" ;           
+- name: Next waiting task  after First 
+  shell:  echo "Staring now next things";
+   
+- name: Delayed Shell Run in Async with polling 
+  shell:  echo "Starting";
+          sleep 15s;          
+          echo "Here" ;
+          sleep 15s ;
+          echo "Running" ;
+          sleep 10s ;
+          echo "Wait now" ;
+  async: 45
+  poll: 0  #Run in async mode
+
+  register: asyncListener
+- name: Next Task waiting to run
+  shell: echo "Done Next now" 
+
+- name: The polling task to check the async status
+  async_status:
+    jid: "{{ asyncListener.ansible_job_id }}"
+    mode : status
+  register: job_result   
+  until: job_result.finished  
+  retries: 30  
+
+- name: Print the output of async Task
+  debug:
+   var: job_result.stdout_lines
